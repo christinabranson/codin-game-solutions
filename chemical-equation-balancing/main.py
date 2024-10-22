@@ -9,11 +9,8 @@ def debug(message):
 
 
 def eval_equation(equation):
-    debug("eval_equation")
-    debug("equation")
-    debug(equation)
-    unique_letters = list(set(extract_letters(equation)))
-    debug(unique_letters)
+    debug("eval_equation: {equation}")
+    unique_letters = sorted(list(set(extract_letters(equation))))
 
     def generalized_loop(ranges):
         combos = []
@@ -38,12 +35,30 @@ def eval_equation(equation):
             # debug(index)
             # debug("letter")
             # debug(letter)
+            if option == (2,1,2):
+                debug(f"Replacing letter {letter} with {str(option[index])}")
             eval_str = eval_str.replace(letter, str(option[index]))
-        # debug(eval_str)
+            if option == (2,1,2):
+                debug(eval_str)
 
         res = eval(eval_str)
+
         if res == 0:
+            debug("="*80)
+            debug(f"equation: {equation}")
+            debug(f"option: {option}")
+            debug(f"eval_str: {eval_str}")
+            debug(f"res: {res}")
+            debug("="*80)
             sols.append(option)
+
+        if option == (2,1,2):
+            debug("="*80)
+            debug(f"equation: {equation}")
+            debug(f"option: {option}")
+            debug(f"eval_str: {eval_str}")
+            debug(f"res: {res}")
+            debug("="*80)
 
     return sols
 
@@ -196,13 +211,17 @@ debug("sol")
 debug(sol)
 result_parts = []
 i = 0
+def get_solution_value(i):
+    if sol[i] == 1:
+        return ""
+    return sol[i]
 for grouping in lhs_terms.keys():
     debug("grouping")
     debug(grouping)
     if grouping in ["+", "-"]:
         result_parts.append(grouping)
     else:
-        result_parts.append(f"{sol[i]}{grouping}")
+        result_parts.append(f"{get_solution_value(i)}{grouping}")
         i += 1
 result_parts.append("->")
 for grouping in rhs_terms.keys():
@@ -211,6 +230,6 @@ for grouping in rhs_terms.keys():
     if grouping in ["+", "-"]:
         result_parts.append(grouping)
     else:
-        result_parts.append(f"{sol[i]}{grouping}")
+        result_parts.append(f"{get_solution_value(i)}{grouping}")
         i += 1
 print(" ".join(result_parts))
